@@ -28,7 +28,7 @@ export class LoginComponent {
       next:(res)=>{
         if(res.message ==="success"){
           localStorage.setItem("token",res.token);
-          this._router.navigate(['/home'])
+          this._router.navigate(['/subjects'])
         }
         this.isloading=false;
       },

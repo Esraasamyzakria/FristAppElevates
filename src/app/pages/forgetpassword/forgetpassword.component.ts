@@ -2,9 +2,11 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import{FormControl, FormGroup, ReactiveFormsModule, Validators} from'@angular/forms';
 import { AuthService } from 'auth';
+import { InputOtpModule } from 'primeng/inputotp';
+
 @Component({
   selector: 'app-forgetpassword',
-  imports: [RouterLink,ReactiveFormsModule],
+  imports: [RouterLink,ReactiveFormsModule,InputOtpModule],
   templateUrl: './forgetpassword.component.html',
   styleUrl: './forgetpassword.component.scss'
 })

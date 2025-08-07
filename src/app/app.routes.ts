@@ -3,19 +3,31 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ForgetpasswordComponent } from './pages/forgetpassword/forgetpassword.component';
-import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
-import { HomeComponent } from './pages/home/home.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { SubjectComponent } from './pages/subject/subject.component';
+import { SubjectexamsubComponent } from './pages/subjectexamsub/subjectexamsub.component';
+import { NotfoundComponent } from './pages/notfound/notfound.component';
+import { loggedGuard } from './core/guards/logged.guard';
+import { authGuard } from './core/guards/auth.guard';
 
 
 export const routes: Routes = [
-  {path:'',component:AuthLayoutComponent ,children: [
+    {path:'',redirectTo:'subjects',pathMatch:'full'},
+  {path:'',component:AuthLayoutComponent ,canActivate:[loggedGuard] ,children: [
     {path:'',redirectTo:'login',pathMatch:'full'},
     {path:'login',component:LoginComponent,title:'login'},
     {path:'register',component:RegisterComponent,title:'register'},
     {path:'forget',component:ForgetpasswordComponent,title:'forget'},
   ] },
-  {path:'',component:MainLayoutComponent,children:[
-    {path:'home',component:HomeComponent,title:'home'}
-  ]}
+{
+
+  path: '',
+  component:DashboardComponent,
+  children: [
+        {path:'subjects',component:SubjectComponent,canActivate:[authGuard],title:'subjects'},
+        { path: 'subsubject/:id', component: SubjectexamsubComponent,title:'subsubject' },
+  ]
+},
+{path:"**",component:NotfoundComponent}
 ];
 

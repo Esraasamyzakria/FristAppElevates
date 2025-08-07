@@ -25,6 +25,7 @@ export class AuthService implements AuthApi {
 catchError(err => of(err)))
 
   }
+  
  register(data:information): Observable<information> {
   return this._httpClient.post(this._bASEURL+ AuthEndPoint.SIGNUP,data).pipe(
     map(res =>this._authapiAdaptorService.adapt(res),
