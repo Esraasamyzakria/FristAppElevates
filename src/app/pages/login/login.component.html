@@ -1,0 +1,86 @@
+<main class=" min-w-full  flex justify-center items-center ">
+  <div class="w-[400px] mx-auto  my-[50px] md:px-7 lg:px-7 ">
+    <h1 class=" font-bold text-2xl mb-8">Sign In</h1>
+    <form [formGroup]="loginform" (ngSubmit)="submitform()">
+        <div>
+            <input  formControlName="email" type="email" id="Email" class="bg-gray-50 mb-5 border shadow-xl border-gray-300 text-[#A1A4A9] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Email"  [class]="{
+            'border-red-600': loginform.get('email')?.touched && !loginform.get('email')?.dirty,
+            'border-green-600': loginform.get('email')?.touched && loginform.get('email')?.dirty
+        }" required />
+        </div>
+                  @let controlemail=loginform.get('email');
+  @if (controlemail?.errors && controlemail?.touched) {
+    <div class="flex p-2  mx-10 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+      <div class=" flex">
+        <svg class="shrink-0 inline w-4 h-4  mt-[2px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+        </svg>
+          <ul class="ps-2 ">
+            @if (controlemail?.getError('required')) {
+              <li>email required</li>
+            }
+            @else if (controlemail?.getError('email')) {
+              <li>Enter Valid Email </li>
+            }
+        </ul>
+      </div>
+  </div>
+  }
+         <div class=" relative">
+            <input formControlName="password"  [type]="showPassword ? 'text' : 'password'" id="Password" class="bg-gray-50 mb-5 border shadow-xl border-gray-300 text-[#A1A4A9] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Password"  [class]="{
+            'border-red-600': loginform.get('password')?.touched && !loginform.get('password')?.dirty,
+            'border-green-600': loginform.get('password')?.touched && loginform.get('password')?.dirty
+        }" required />
+  <div
+    class="absolute inset-y-0 end-3 flex items-center cursor-pointer"
+    (click)="togglePasswordVisibility()"
+  >
+    <i [class]="showPassword ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye'"></i>
+  </div>
+        </div>
+  @let controlpassword =loginform.get('password');
+  @if (controlpassword?.errors && controlpassword?.touched) {
+    <div class="flex p-2  mx-10 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+      <div class=" flex">
+        <svg class="shrink-0 inline w-4 h-4  mt-[2px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+        </svg>
+          <ul class="ps-2 ">
+            @if (controlpassword?.getError('required')) {
+              <li>password required</li>
+            }
+            @else if (controlpassword?.getError('pattern')) {
+              <li>password must start with upperCase then from 6 to more any chars and #?!$%^&*- </li>
+            }
+        </ul>
+      </div>
+  </div>
+  }
+        <a  routerLink="/forget" class="cursor-pointer ms-[250px] md:ms-[200px] text-[#4461F2]"> Recover Password ?</a>
+        <button  [disabled]="isloading"  type="submit" class="  bg-[#4461F2]  mx-auto text-white my-5  focus:outline-none  font-medium rounded-2xl text-sm px-[100px] py-3 text-center block ">Sign in  @if (isloading) {
+  <i class=" fas fa-spinner fa-spin"></i>
+} </button>
+<p class=" font-semibold text-red-700  text-center">{{massageerr}}</p>
+        <div class="inline-flex  relative items-center justify-center w-full">
+          <hr class="w-64 h-px my-2 bg-gray-200 border-0 dark:bg-gray-700">
+          <span class="absolute px-3 font-normal  text-[#6C737F] -translate-x-1/2 left-1/2 dark:text-white dark:bg-gray-900">Or Continue with</span>
+        </div>
+        <div class=" flex items-center   justify-around my-5">
+          <a class="bg-white size-10 rounded-xl  hover:size-12 flex justify-center items-center  cursor-pointer text-[#4461F2]  shadow-xl ">
+            <img src="/images/Logo Google.svg" alt="" srcset="">
+          </a>
+                    <a class="bg-white size-10 hover:size-12 rounded-xl flex justify-center items-center  cursor-pointer text-[#4461F2]  shadow-xl ">
+            <i class="fa-brands fa-twitter text-[25px]"></i>
+          </a>
+                    <a class="bg-white size-10 hover:size-12  rounded-xl flex justify-center items-center  cursor-pointer text-[#4461F2]  shadow-xl ">
+            <i class="fa-brands fa-facebook text-[25px]"></i>
+          </a>
+                    <a class="bg-white   size-10 hover:size-12 rounded-xl flex justify-center items-center  cursor-pointer text-black   shadow-xl ">
+           <i class="fa-brands fa-apple text-[25px]"></i>
+          </a>
+        </div>
+
+    </form>
+  </div>
+</main>
+

@@ -1,0 +1,56 @@
+import { inject, Injectable } from '@angular/core';
+import { AuthApi } from './base/AuthApi';
+import { catchError, map, Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { AuthEndPoint } from './enums/AuthEndPoint';
+import { AuthapiAdaptorService } from './adaptor/authapi.adaptor';
+import { information } from './interface/information';
+import { Verfyemail } from './interface/verfyemail';
+import { Verfycode } from './interface/verfycode';
+import { Verfypassword } from './interface/verfypassword';
+import { BASE_URL } from './base-url';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService implements AuthApi {
+  _httpClient=inject(HttpClient);
+  _bASEURL=inject(BASE_URL)
+  _authapiAdaptorService=inject(AuthapiAdaptorService);
+
+  constructor() { }
+ login(data: information): Observable<information> {
+  return this._httpClient.post(this._bASEURL+ AuthEndPoint.LOGIN,data)
+  .pipe(map(res => this._authapiAdaptorService.adapt(res)),
+catchError(err => of(err)))
+
+  }
+  
+ register(data:information): Observable<information> {
+  return this._httpClient.post(this._bASEURL+ AuthEndPoint.SIGNUP,data).pipe(
+    map(res =>this._authapiAdaptorService.adapt(res),
+),catchError(err => of(err))
+  )
+
+}
+ vrefyemail(data: Verfyemail): Observable<Verfyemail> {
+    return this._httpClient.post(this._bASEURL+ AuthEndPoint.FORGOTPASSWORD,data).pipe(
+      map(res =>res as Verfyemail
+      ),  catchError(err => of(err))
+    )
+}
+ vrefycode(data: Verfycode): Observable<Verfycode> {
+    return this._httpClient.post(this._bASEURL+ AuthEndPoint.VERIFY,data).pipe(
+      map(res =>res as Verfycode
+      ),  catchError(err => of(err))
+    )
+}
+ vrefypasswored(data: Verfypassword): Observable<Verfypassword> {
+      return this._httpClient.post(this._bASEURL+ AuthEndPoint.RESETPASSWORD,data).pipe(
+      map(res =>res as Verfypassword
+      ),  catchError(err => of(err))
+    )
+
+}
+
+}
