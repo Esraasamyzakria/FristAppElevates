@@ -2,7 +2,6 @@ import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SubjectService } from '../../core/services/subject/subject.service';
 import { ISubject } from '../../shared/interface/isubject';
-import { DashboardComponent } from "../dashboard/dashboard.component";
 
 @Component({
   selector: 'app-subject',

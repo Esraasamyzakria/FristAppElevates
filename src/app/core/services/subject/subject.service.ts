@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import {  Observable } from 'rxjs';
-import{isPlatformBrowser}from '@angular/common';
+import { ISubject } from '../../../shared/interface/isubject';
+import { BASE_URL } from 'auth';
 
 @Injectable({
   providedIn: 'root'
@@ -10,18 +11,14 @@ export class SubjectService {
 
 _HttpClient=inject(HttpClient);
 _pLATFORM_ID=inject(PLATFORM_ID);
+_bASE_URL=inject(BASE_URL);
 
 subject():Observable<any>{
-  return this._HttpClient.get("https://exam.elevateegy.com/api/v1/subjects"
-  )
+  return this._HttpClient.get(`/api/v1/subjects`)
 }
 subsubjectexam(id:string):Observable<any>{
-  return this._HttpClient.get( `https://exam.elevateegy.com/api/v1/exams?subject=${id}`,
-    // {
-    //   headers:{
-    //     token:localStorage.getItem("token")!
-    //   }
-    // }
+
+  return this._HttpClient.get(this._bASE_URL+ `/api/v1/exams?subject=${id}`,
   )
 }
 }

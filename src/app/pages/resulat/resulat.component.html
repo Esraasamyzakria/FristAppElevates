@@ -1,0 +1,53 @@
+<section class=" ">
+ @if (wrongAnswers.length === 0) {
+    <div class="text-center py-10">
+      <p class="text-green-600 text-xl font-semibold">Congratulations! All answers are correct.</p>
+    </div>
+  } @else {
+    <section class="grid  sm:grid-cols-2  gap-4">
+      @for (item of wrongAnswers; track $index) {
+        <div class="question shadow-xl p-4 bg-[#F9F9F9] rounded-xl border-2">
+          <p class="font-bold text-lg mb-3">{{ item.question }}</p>
+
+          <!-- الإجابات -->
+          @for (answer of item.answers; track $index) {
+            <div class="flex items-center mb-3 w-full rounded-xl py-3 ps-3
+              mt-4 bg-[#EDEFF3]   shadow-md"
+                 [class.bg-red-100]="answer.answer === item.userAnswer"
+                 [class.border-2]="answer.answer === item.userAnswer"
+                 [class.border-red-500]="answer.answer === item.userAnswer"
+                 [class.bg-green-100]="answer.answer === item.correctAnswer"
+                 [class.border-2]="answer.answer === item.correctAnswer"
+                 [class.border-green-500]="answer.answer === item.correctAnswer">
+              <input
+                type="radio"
+                [checked]="answer.answer === item.userAnswer || answer.answer === item.correctAnswer"
+                [class]="answer.answer === item.userAnswer ? 'w-4 h-4 text-red-600 border-red-600' :
+                         (answer.answer === item.correctAnswer ? 'w-4 h-4 text-green-600 border-green-600' :
+                         'w-4 h-4 text-blue-600 border-gray-300')"
+                disabled>
+              <label class="ms-2 text-sm font-medium text-gray-900">
+                {{ answer.answer }}
+              </label>
+            </div>
+          }
+
+          <!-- التوضيح -->
+          <div class="mt-3 text-sm">
+            @if (item.userAnswer !== item.correctAnswer) {
+              <p class="text-red-600">Your answer: <span class="font-semibold">{{ item.userAnswer }}</span></p>
+            }
+            <p class="text-green-600">Correct answer: <span class="font-semibold">{{ item.correctAnswer }}</span></p>
+          </div>
+        </div>
+      }
+    </section>
+  }
+</section>
+  <section class="flex justify-end mt-5">
+          <button
+      class="py-1 rounded-full px-[100px]   hover:bg-white hover:text-[#4461F2] text-lg border border-[#4461F2] text-white bg-[#4461F2] hover:bg-opacity-90 transition-colors"
+      type="button"   (click)="closeDialog()">
+      Close
+    </button>
+  </section>

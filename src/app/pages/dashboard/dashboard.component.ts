@@ -3,6 +3,7 @@ import { FlowbiteService } from '../../core/services/Flowbite/flowbite.service';
 import { initFlowbite } from 'flowbite';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { RouterOutlet } from "@angular/router";
+import { AuthService } from 'auth';
 
 
 
@@ -14,6 +15,7 @@ import { RouterOutlet } from "@angular/router";
 })
 export class DashboardComponent {
 _router=inject(Router)
+ _authService=inject(AuthService)
   constructor(private flowbiteService: FlowbiteService) {}
 
   ngOnInit(): void {
@@ -22,8 +24,14 @@ _router=inject(Router)
     });
   }
   logout():void{
-     localStorage.removeItem("token");
-    this._router.navigate(['/login'])
+    this._authService.logout().subscribe({
+      next:(res)=>{
+        if(res.message ==="success"){
+        localStorage.removeItem("token");
+        this._router.navigate(['/login'])
+        }
+      }
+    })
   }
 }
 

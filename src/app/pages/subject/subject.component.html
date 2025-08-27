@@ -1,6 +1,10 @@
+  <div class=" my-4 mx-2 flex items-center justify-between">
+    <p class=" text-[#4461F2] text-xl">Quizes</p>
+    <p class=" text-[#4461F2] text-xl">View All</p>
+  </div>
 <div class="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3  gap-10 mt-100">
-  @for (subject of subjectdata.slice(0,12); track $index) {
- <div [routerLink]="['/subsubject',subject._id]" class="  relative w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+  @for (subject of subjectdata; track $index) {
+ <div [routerLink]="['/details',subject._id]" class="  relative w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
     <a >
         <img class=" w-full h-[280px] rounded-t-lg" [src]="subject.icon" alt="product image" />
     </a>

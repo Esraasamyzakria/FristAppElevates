@@ -11,7 +11,7 @@ import { AuthService } from 'auth';
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
-    _authService=inject(AuthService)
+    _authService=inject(AuthService);
     isloading:boolean=false;
     massageerr:string='';
      showPassword = false;
@@ -55,4 +55,5 @@ export class RegisterComponent {
      togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
+ 
 }
