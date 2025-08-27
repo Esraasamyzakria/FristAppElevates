@@ -5,10 +5,14 @@ import { RegisterComponent } from './pages/register/register.component';
 import { ForgetpasswordComponent } from './pages/forgetpassword/forgetpassword.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { SubjectComponent } from './pages/subject/subject.component';
-import { SubjectexamsubComponent } from './pages/subjectexamsub/subjectexamsub.component';
 import { NotfoundComponent } from './pages/notfound/notfound.component';
 import { loggedGuard } from './core/guards/logged.guard';
 import { authGuard } from './core/guards/auth.guard';
+import { DetailsComponent } from './pages/details/details.component';
+import { ExamsComponent } from './pages/exams/exams.component';
+import { ScoreresulatComponent } from './pages/scoreresulat/scoreresulat.component';
+import { ResulatComponent } from './pages/resulat/resulat.component';
+
 
 
 export const routes: Routes = [
@@ -25,7 +29,10 @@ export const routes: Routes = [
   component:DashboardComponent,
   children: [
         {path:'subjects',component:SubjectComponent,canActivate:[authGuard],title:'subjects'},
-        { path: 'subsubject/:id', component: SubjectexamsubComponent,title:'subsubject' },
+        { path: 'details/:id', component: DetailsComponent,title:'details' },
+        { path: 'Exams', component:ExamsComponent,title:'Exams' },
+        { path: 'Score', component:ScoreresulatComponent,title:'Score' },
+        { path: 'Resulat', component:ResulatComponent,title:'Resulat' },
   ]
 },
 {path:"**",component:NotfoundComponent}

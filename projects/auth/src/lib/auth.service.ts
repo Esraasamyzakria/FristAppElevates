@@ -5,10 +5,11 @@ import { HttpClient } from '@angular/common/http';
 import { AuthEndPoint } from './enums/AuthEndPoint';
 import { AuthapiAdaptorService } from './adaptor/authapi.adaptor';
 import { information } from './interface/information';
-import { Verfyemail } from './interface/verfyemail';
 import { Verfycode } from './interface/verfycode';
-import { Verfypassword } from './interface/verfypassword';
 import { BASE_URL } from './base-url';
+import { Logout } from './interface/logout';
+import { Verfyemail } from './interface/verfyemail';
+import { Verfypassword } from './interface/verfypassword';
 
 @Injectable({
   providedIn: 'root'
@@ -18,14 +19,13 @@ export class AuthService implements AuthApi {
   _bASEURL=inject(BASE_URL)
   _authapiAdaptorService=inject(AuthapiAdaptorService);
 
-  constructor() { }
  login(data: information): Observable<information> {
   return this._httpClient.post(this._bASEURL+ AuthEndPoint.LOGIN,data)
   .pipe(map(res => this._authapiAdaptorService.adapt(res)),
 catchError(err => of(err)))
 
   }
-  
+
  register(data:information): Observable<information> {
   return this._httpClient.post(this._bASEURL+ AuthEndPoint.SIGNUP,data).pipe(
     map(res =>this._authapiAdaptorService.adapt(res),
@@ -51,6 +51,12 @@ catchError(err => of(err)))
       ),  catchError(err => of(err))
     )
 
+}
+logout():Observable<Logout>{
+  return this._httpClient.get<Logout>(this._bASEURL + AuthEndPoint.LOGOUT).pipe(
+    map(res => res as Logout),
+    catchError(err =>of(err))
+  )
 }
 
 }

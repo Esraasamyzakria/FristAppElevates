@@ -9,19 +9,24 @@ import {  provideHttpClient, withFetch, withInterceptors } from '@angular/common
 import { BASE_URL } from 'auth';
 import { provideStore } from '@ngrx/store';
 import { headerInterceptor } from './core/interceptors/header.interceptor';
+import { questionreducer } from './store/question.reducer';
+import { provideEffects } from '@ngrx/effects';
+import { loadquestionEffects } from './store/question.effect';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-    provideHttpClient(withFetch(),withInterceptors([headerInterceptor])),
-            provideAnimationsAsync(),
-        providePrimeNG({
-            theme: {
-                preset: Aura
-            }
-        }),
+    provideHttpClient(withFetch(), withInterceptors([headerInterceptor])),
+    provideAnimationsAsync(),
+    providePrimeNG({
+        theme: {
+            preset: Aura
+        }
+    }),
     { provide: BASE_URL,
         useValue: "https://exam.elevateegy.com"
-    }, provideStore()]
+    }, provideStore({
+        questionexam: questionreducer,
+    }), provideEffects(loadquestionEffects)]
 };

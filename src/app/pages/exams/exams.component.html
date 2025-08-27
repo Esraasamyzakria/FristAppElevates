@@ -1,0 +1,90 @@
+<div class="exams">
+  @if (showInstructions) {
+       <div class="instructions-container">
+      <h2 class="font-bold text-xl mb-2">Instructions</h2>
+      <ul class="text-[#535353] space-y-1 list-disc list-inside">
+        <li>Lorem ipsum dolor sit amet consectetur.</li>
+        <li>Lorem ipsum dolor sit amet consectetur.</li>
+        <li>Lorem ipsum dolor sit amet consectetur.</li>
+      </ul>
+      <p-button
+        styleClass="text-white !rounded-full mt-4 w-full !me-2 !px-5 !py-1 !border-0 !bg-[#4461F2]"
+        (click)="startExam()"
+        label="start" />
+    </div>
+  }
+
+  @if (!showInstructions && !examFinished) {
+     <div class="exam-container">
+      <div class="starts flex items-center justify-between p-4 py-3 md:p-5 rounded-t dark:border-gray-600">
+        <span class="text-sm text-[#4461F2]">Question {{ currentQuestionIndex + 1 }} of {{ totalQuestions }}</span>
+        <div class="flex items-center">
+          <img src="/images/image 2.png" alt="Timer Icon">
+          <span class="text-[#11CE19]">{{formattedTime}}</span>
+        </div>
+      </div>
+
+      <div class="progress-indicator flex flex-wrap justify-between p-4 gap-2">
+        @for (question of questions; track $index; let i = $index) {
+          <div
+            class="question-dot size-2 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300"
+            [class]="getQuestionDotClass(i)"
+            (click)="goToQuestion(i)">
+          </div>
+        }
+      </div>
+
+      <div class="qestion">
+        <p class="font-bold text-lg">{{currentQuestion?.question}}</p>
+@for (answer of currentQuestion?.answers; track $index; let i = $index) {
+  <div
+    class="flex items-center mb-4 mt-4 w-full bg-[#EDEFF3] rounded-xl py-4 ps-3 cursor-pointer transition-colors"
+    [class.bg-[#CCD7EB]]="selectedAnswer === answer.key"
+    (click)="onAnswerSelect(answer.key)">
+
+    <input
+      type="radio"
+      [value]="answer.key"
+      [name]="'answer_' + currentQuestionIndex"
+      [id]="'answer_' + currentQuestionIndex + '_' + i"
+      class="w-4 h-4 text-blue-600 bg-gray-100 border-[#02369C] focus:ring-2 cursor-pointer"
+      [checked]="selectedAnswer === answer.key">
+
+    <label
+      [for]="'answer_' + currentQuestionIndex + '_' + i"
+      class="ms-2 text-sm font-medium text-gray-900 cursor-pointer w-full">
+      {{ answer.answer }}
+    </label>
+  </div>
+}
+      </div>
+
+      <div class="flex justify-between items-center">
+        <button
+          class="py-1 rounded-full px-[75px] hover:bg-[#4461F2] hover:text-white text-[#4471F2] text-lg border border-[#4471F2]"
+          type="button"
+          (click)="goToPreviousQuestion()"
+          [disabled]="currentQuestionIndex === 0">
+          Back
+        </button>
+
+        <button
+          class="py-1 rounded-full px-[75px] hover:bg-white hover:text-[#4461F2] text-lg border border-[#4461F2] text-white bg-[#4461F2]"
+          type="button"
+          (click)="goToNextQuestion()"
+          [disabled]="currentQuestionIndex === totalQuestions - 1 && !allQuestionsAnswered">
+          {{ currentQuestionIndex === totalQuestions - 1 ? 'Finish' : 'Next' }}
+        </button>
+      </div>
+    </div>
+          @if (currentQuestionIndex === totalQuestions - 1 && !allQuestionsAnswered) {
+        <div class="mt-4 p-3 bg-yellow-100 text-yellow-800 rounded-lg text-center">
+          <i class="fas fa-exclamation-triangle mr-2"></i>
+          يجب الإجابة على جميع الأسئلة قبل إنهاء الامتحان
+        </div>
+      }
+  }
+  @if (examFinished) {
+    <app-scoreresulat></app-scoreresulat>
+  }
+</div>

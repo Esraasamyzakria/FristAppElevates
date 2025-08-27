@@ -1,0 +1,38 @@
+    @if(loadexam < 0 || Exams.length === 0 ){
+      <div class=" grid md:grid-cols-2">
+            <img src="/images/noexams.jpg" alt="" srcset="" width="400px">
+            <div class=" flex items-center">
+                     <p>Sorry, there are no exams available at this time.</p>
+            </div>
+      </div>
+    }
+
+
+@else {
+ <section class="" >
+@for (detial of Exams ; track $index) {
+  <h1  class=" font-bold text-xl py-5">{{detial.title}}</h1>
+    <div class="  flex w-full justify-between  py-3 bg-white rounded-xl  shadow-2xl">
+    <div class=" flex ps-2  ">
+   <div class="">
+     <img src="/images/frontt.jpg" alt="front" class=" rounded-lg" width="100px" height="100px" srcset="">
+   </div>
+   <div class=" ps-5">
+    <h2 class=" text-red-950 font-bold text-md italic pb-3 ">{{detial.title}}</h2>
+    <p class=" text-[#535353]">{{detial.numberOfQuestions}} Question</p>
+   </div>
+  </div>
+  <div >
+    <p class=" text-center   text-[#535353] pb-2">{{detial.duration}} Minutes</p>
+    <button type="submit" class="text-white rounded-full ms-5 me-2  px-5 py-1 border-0 bg-[#4461F2]"  (click)="openexam(detial._id)" >start</button>
+  </div>
+</div>
+}
+</section>
+}
+
+<div class="dialog">
+  <p-dialog [closable]="true" [modal]="true" [(visible)]="visible" [style]="{ width: '40rem' }">
+     <app-exams  ></app-exams>
+  </p-dialog>
+</div>

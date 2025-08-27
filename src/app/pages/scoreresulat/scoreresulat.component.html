@@ -1,0 +1,82 @@
+@if (!showresulat) {
+  <div class="results-container text-start">
+  <h2 class="text-xl font-bold text-[#0F0F0F] mb-6">Your score</h2>
+
+  <div class="flex justify-around items-center">
+    <!-- دائرة النتيجة المتدرجة بلونين -->
+    <div class="score-circle relative size-[132px] mb-6">
+      <svg class="w-full h-full" viewBox="0 0 100 100">
+        <!-- الجزء الأحمر (الإجابات الخاطئة) -->
+        <circle
+          cx="50" cy="50" r="45"
+          fill="none"
+          stroke="#CC1010"
+          stroke-width="8"
+          [attr.stroke-dasharray]="283"
+          [attr.stroke-dashoffset]="283 - (283 * wrongPercentage / 100)"
+          stroke-linecap="round"
+          transform="rotate(-90 50 50)"
+          class="transition-all duration-1000"
+        />
+
+        <!-- الجزء الأزرق (الإجابات الصحيحة) -->
+        <circle
+          cx="50" cy="50" r="45"
+          fill="none"
+          stroke="#4461F2"
+          stroke-width="8"
+          [attr.stroke-dasharray]="283"
+          [attr.stroke-dashoffset]="283 - (283 * correctPercentage / 100)"
+          stroke-linecap="round"
+          transform="rotate(-90 50 50)"
+          class="transition-all duration-1000"
+        />
+      </svg>
+
+      <!-- النسبة في المنتصف -->
+      <div class="absolute inset-0 flex items-center justify-center flex-col">
+        <span class="text-2xl font-bold text-[#373737]">
+          {{scorePercentage}}%
+        </span>
+
+      </div>
+    </div>
+
+    <div class="">
+      <h2 class="pb-5 text-[#02369C] text-xl">
+        Correct
+        <span class="rounded-full border border-[#02369C] size-[32px] text-sm px-1.5 py-1 inline-flex items-center justify-center ml-2">
+          {{correctAnswers}}
+        </span>
+      </h2>
+      <h2 class="text-xl text-[#CC1010]">
+        Incorrect
+        <span class="rounded-full border border-[#CC1010] size-[32px] text-sm px-1.5 py-1 inline-flex items-center justify-center ml-2">
+          {{wrongAnswers}}
+        </span>
+      </h2>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-between my-2">
+          <button
+      class="py-1 rounded-full md:px-[75px]  px-[65px] hover:bg-[#4461F2] hover:text-white text-[#4471F2] text-lg border border-[#4471F2] transition-colors"
+      type="button"
+      (click)="backToInstructions()">
+      Back
+    </button>
+
+          <button
+      class="py-2 rounded-full  md:px-[75px]  text-sm  px-[65px] hover:bg-white hover:text-[#4461F2] md:text-lg border border-[#4461F2] text-white bg-[#4461F2] hover:bg-opacity-90 transition-colors"
+      type="button" (click)="getpageresulat()">
+      ShowResults
+    </button>
+
+  </div>
+</div>
+}
+@if (showresulat) {
+  <div class="">
+<app-resulat></app-resulat>
+</div>
+}
