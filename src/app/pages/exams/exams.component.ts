@@ -29,14 +29,12 @@ export class ExamsComponent implements OnInit, OnDestroy {
   totalQuestions = 0;
   duration = 0;
   showInstructions = true;
-  examFinished = false; // حالة جديدة لتتبع انتهاء الامتحان
+  examFinished = false;
 
-  // متغيرات المؤقت
   minutes = 0;
   seconds = 0;
   timer: any;
   totalSecondsRemaining = 0;
-  isLoading = true;
   examStarted = false;
 
   ngOnInit(): void {
@@ -49,17 +47,17 @@ export class ExamsComponent implements OnInit, OnDestroy {
   get allQuestionsAnswered(): boolean {
     return this.userAnswers.length >= this.totalQuestions;
   }
+  isCurrentQuestionAnswered(): boolean {
+  return !!this.selectedAnswer;
+}
   getallquestion() {
     this._store.select("questionexam").subscribe({
-      next: (res: any) => {
+      next: (res) => {
         this.questions = res.questions || [];
         this.userAnswers = res.userAnswers || [];
         this.totalQuestions = this.questions.length;
-
         if (this.questions.length > 0 && this.questions[0].exam) {
           this.duration = this.questions[0].exam.duration;
-
-          // بدء المؤقت فقط إذا لم يبدأ من قبل
           if (!this.examStarted) {
             this.startTimer();
             this.examStarted = true;
@@ -72,18 +70,15 @@ export class ExamsComponent implements OnInit, OnDestroy {
           this.selectedAnswer = previousAnswer ? previousAnswer.key : '';
         }
 
-        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error loading questions:', err);
-        this.isLoading = false;
       }
     });
   }
 
   startTimer() {
-    // تحويل مدة الامتحان من دقائق إلى ثواني
-    this.totalSecondsRemaining = this.duration * 60;
+        this.totalSecondsRemaining = this.duration * 60;
 
     this.updateDisplayTime();
 

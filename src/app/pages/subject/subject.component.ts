@@ -21,7 +21,6 @@ ngOnInit(): void {
 getsubject():void{
   this._SubjectService.subject().subscribe({
     next:(res)=>{
-      console.log(res.subjects);
       this.subjectdata=res.subjects
     },
             error:(err)=>{

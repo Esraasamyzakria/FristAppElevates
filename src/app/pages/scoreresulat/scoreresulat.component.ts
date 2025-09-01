@@ -33,6 +33,9 @@ export class ScoreresulatComponent implements OnInit {
       ? (this.wrongAnswers / this.totalQuestions) * 100
       : 0;
   }
+   get hasWrongAnswers(): boolean {
+    return this.wrongAnswers > 0;
+  }
 
    ngOnInit(): void {
     this.getResultsFromStore();

@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import{  FormControl, FormGroup, ReactiveFormsModule, Validators} from'@angular/forms';
 import { AuthService } from 'auth';
 import { HttpErrorResponse } from '@angular/common/http';
+import { pattren } from '../../shared/enviroment/pattrenpasswored';
 
 @Component({
   selector: 'app-login',
@@ -12,14 +13,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class LoginComponent {
       isloading:boolean=false;
-    massageerr:string='';
     showPassword = false;
 
   _authService=inject(AuthService)
   _router=inject(Router)
   loginform:FormGroup=new FormGroup({
     email:new FormControl(null,[Validators.required,Validators.email]),
-    password:new FormControl(null,[Validators.required,Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)]),
+    password:new FormControl(null,[Validators.required,Validators.pattern(pattren.pass)]),
   })
   submitform(){
     if(this.loginform.valid){
@@ -31,11 +31,6 @@ export class LoginComponent {
           this._router.navigate(['/subjects'])
         }
         this.isloading=false;
-      },
-            error:(err:HttpErrorResponse)=>{
-        this.massageerr=err.error.message;
-                  this.isloading=false;
-
       }
     })
     }else{

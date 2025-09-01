@@ -1,5 +1,5 @@
 
-export interface Isubsubjectexam {
+export interface Idetails {
   _id:               string;
   title:             string;
   duration:          number;

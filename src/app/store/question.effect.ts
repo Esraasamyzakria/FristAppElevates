@@ -17,9 +17,7 @@ export class loadquestionEffects {
         this.questionService.getallquestion(action.examid).subscribe({
 
           next:(res)=>{
-            // console.log(res)
             this._store.dispatch(setquestion({questions:res.questions}))
-            // console.log(res.questions)
           }
         })
       })

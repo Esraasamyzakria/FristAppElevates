@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from 'auth';
+import { pattren } from '../../shared/enviroment/pattrenpasswored';
 
 @Component({
   selector: 'app-register',
@@ -13,7 +14,6 @@ import { AuthService } from 'auth';
 export class RegisterComponent {
     _authService=inject(AuthService);
     isloading:boolean=false;
-    massageerr:string='';
      showPassword = false;
     _router=inject(Router)
   rgisterform:FormGroup=new FormGroup({
@@ -21,7 +21,7 @@ export class RegisterComponent {
     firstName:new FormControl(null,[Validators.required,Validators.minLength(3),Validators.maxLength(10)]),
     lastName:new FormControl(null,[Validators.required,Validators.minLength(3),Validators.maxLength(10)]),
     email:new FormControl(null,[Validators.required,Validators.email]),
-    password:new FormControl(null,[Validators.required,Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)]),
+    password:new FormControl(null,[Validators.required,Validators.pattern(pattren.pass)]),
     rePassword:new FormControl(null,[Validators.required]),
     phone:new FormControl(null,[Validators.required,Validators.pattern(/^01[0125][0-9]{8}$/)]),
   },{ validators:this.confirempassword})
@@ -36,11 +36,6 @@ export class RegisterComponent {
         }
         this.isloading=false;
       },
-      error:(err:HttpErrorResponse)=>{
-        this.massageerr=err.error.message;
-                  this.isloading=false;
-
-      }
     })
     }else{
       this.rgisterform.markAllAsTouched();
@@ -55,5 +50,5 @@ export class RegisterComponent {
      togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
- 
+
 }

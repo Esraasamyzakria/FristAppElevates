@@ -68,13 +68,16 @@
           Back
         </button>
 
-        <button
-          class="py-1 rounded-full px-[75px] hover:bg-white hover:text-[#4461F2] text-lg border border-[#4461F2] text-white bg-[#4461F2]"
-          type="button"
-          (click)="goToNextQuestion()"
-          [disabled]="currentQuestionIndex === totalQuestions - 1 && !allQuestionsAnswered">
-          {{ currentQuestionIndex === totalQuestions - 1 ? 'Finish' : 'Next' }}
-        </button>
+<button
+  class="py-1 rounded-full px-[75px] text-lg border "
+  type="button"
+    [class]="!selectedAnswer ?
+    'bg-gray-300  text-gray-600 border-bg-gray-300  cursor-not-allowed' :
+    'bg-[#4461F2] text-white border-[#4461F2] hover:bg-white hover:text-[#4461F2]'"
+  (click)="selectedAnswer && goToNextQuestion()"
+  [disabled]="!selectedAnswer || (currentQuestionIndex === totalQuestions - 1 && !allQuestionsAnswered)">
+  {{ currentQuestionIndex === totalQuestions - 1 ? 'Finish' : 'Next' }}
+</button>
       </div>
     </div>
           @if (currentQuestionIndex === totalQuestions - 1 && !allQuestionsAnswered) {

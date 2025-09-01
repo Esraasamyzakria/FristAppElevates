@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import{FormControl, FormGroup, ReactiveFormsModule, Validators} from'@angular/forms';
 import { AuthService } from 'auth';
+import { pattren } from '../../shared/enviroment/pattrenpasswored';
 
 
 @Component({
@@ -24,7 +25,7 @@ export class ForgetpasswordComponent {
   });
     resetpassword:FormGroup=new FormGroup({
     email:new FormControl(null,[Validators.required,Validators.email]),
-    newPassword:new FormControl(null,[Validators.required,Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)])
+    newPassword:new FormControl(null,[Validators.required,Validators.pattern(pattren.pass)])
   });
 submitemail():void{
   let veryemail=this.verfiyemail.get('email')?.value;
@@ -64,7 +65,9 @@ if(this.resetpassword.valid){
     this._authService.vrefypasswored(this.resetpassword.value).subscribe({
     next:(res)=>{
         localStorage.setItem("token",res.token)
-        this._router.navigate(['/home'])
+        console.log(res)
+        console.log(res.token)
+        this._router.navigate(['/subjects'])
     }
   })
 }else{

@@ -6,13 +6,11 @@ import { loadquestion,setquestion, submitanswer } from "./question.action";
 export const questionreducer =createReducer(
   initialExamState,
   on(loadquestion,(State)=>({
-    ...State,
-    isLoading:true,
+    ...State
   })),
   on(setquestion,(state,{ questions})=>({
     ...state,
     questions,
-    isLoading: false,
     currentQuestionId:questions.length>0? questions[0]._id:null
 
   })),

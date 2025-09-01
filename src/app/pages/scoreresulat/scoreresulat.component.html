@@ -66,11 +66,13 @@
       Back
     </button>
 
-          <button
-      class="py-2 rounded-full  md:px-[75px]  text-sm  px-[65px] hover:bg-white hover:text-[#4461F2] md:text-lg border border-[#4461F2] text-white bg-[#4461F2] hover:bg-opacity-90 transition-colors"
-      type="button" (click)="getpageresulat()">
-      ShowResults
-    </button>
+       @if (hasWrongAnswers) {
+        <button
+          class="py-2 rounded-full md:px-[75px] text-sm px-[65px] hover:bg-white hover:text-[#4461F2] md:text-lg border border-[#4461F2] text-white bg-[#4461F2] hover:bg-opacity-90 transition-colors"
+          type="button" (click)="getpageresulat()">
+          ShowResults
+        </button>
+      }
 
   </div>
 </div>

@@ -14,9 +14,9 @@ _pLATFORM_ID=inject(PLATFORM_ID);
 _bASE_URL=inject(BASE_URL);
 
 subject():Observable<any>{
-  return this._HttpClient.get(`/api/v1/subjects`)
+  return this._HttpClient.get(this._bASE_URL+`/api/v1/subjects`)
 }
-subsubjectexam(id:string):Observable<any>{
+details(id:string):Observable<any>{
 
   return this._HttpClient.get(this._bASE_URL+ `/api/v1/exams?subject=${id}`,
   )

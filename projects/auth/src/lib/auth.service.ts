@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { AuthApi } from './base/AuthApi';
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { AuthEndPoint } from './enums/AuthEndPoint';
 import { AuthapiAdaptorService } from './adaptor/authapi.adaptor';
@@ -45,12 +45,14 @@ catchError(err => of(err)))
       ),  catchError(err => of(err))
     )
 }
- vrefypasswored(data: Verfypassword): Observable<Verfypassword> {
-      return this._httpClient.post(this._bASEURL+ AuthEndPoint.RESETPASSWORD,data).pipe(
-      map(res =>res as Verfypassword
-      ),  catchError(err => of(err))
-    )
-
+vrefypasswored(data: Verfypassword): Observable<any> {
+  return this._httpClient.put(this._bASEURL + AuthEndPoint.RESETPASSWORD, data).pipe(
+    map((res: any) => res),
+    catchError(err => {
+      console.error("Reset password error:", err);
+      return throwError(() => err); // ✅ error هيتبعت للـ subscribe.error
+    })
+  );
 }
 logout():Observable<Logout>{
   return this._httpClient.get<Logout>(this._bASEURL + AuthEndPoint.LOGOUT).pipe(
