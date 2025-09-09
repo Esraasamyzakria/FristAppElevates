@@ -12,6 +12,8 @@ import { headerInterceptor } from './core/interceptors/header.interceptor';
 import { questionreducer } from './store/question.reducer';
 import { provideEffects } from '@ngrx/effects';
 import { loadquestionEffects } from './store/question.effect';
+import { provideToastr } from 'ngx-toastr';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 
 export const appConfig: ApplicationConfig = {
@@ -19,6 +21,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideHttpClient(withFetch(), withInterceptors([headerInterceptor,loadingInterceptor])),
+        provideAnimations(), // required animations providers
+    provideToastr(),
     provideAnimationsAsync(),
     providePrimeNG({
         theme: {

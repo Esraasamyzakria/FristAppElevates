@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, inject, OnInit, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SubjectService } from '../../core/services/subject/subject.service';
 import { DialogModule } from 'primeng/dialog';
@@ -15,57 +15,62 @@ import { Idetails } from '../../shared/interface/idetails';
 
 @Component({
   selector: 'app-details',
-  imports: [DialogModule, ButtonModule, StepperModule,ExamsComponent],
+  imports: [DialogModule, ButtonModule, StepperModule, ExamsComponent],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss'
 })
-export class DetailsComponent implements OnInit {
-    private readonly _activatedRoute=inject(ActivatedRoute);
-  private readonly _SubjectService=inject(SubjectService);
-  private readonly pLATFORM_ID=inject(PLATFORM_ID);
-  private readonly dialogService=inject(DialogService);
-  _store=inject(Store);
-    private dialogSubscription!: Subscription;
-Exams:Idetails[]=[];
-  subjectid:any;
-  loadexam!:number
-  // !diaglo
-   visible = false;
-   ngOnInit(): void {
-    this.getdatasubmet()
-        this.dialogSubscription = this.dialogService.closeDialog$.subscribe(() => {
+export class DetailsComponent implements OnInit, OnDestroy {
+  private readonly _activatedRoute = inject(ActivatedRoute);
+  private readonly _SubjectService = inject(SubjectService);
+  private readonly pLATFORM_ID = inject(PLATFORM_ID);
+  private readonly dialogService = inject(DialogService);
+  _store = inject(Store);
+
+  private dialogSubscription!: Subscription;
+  private detailsSubscription!: Subscription;
+
+  Exams: Idetails[] = [];
+  subjectid: any;
+  loadexam!: number;
+  visible = false;
+
+  ngOnInit(): void {
+    this.getdatasubmet();
+
+    this.dialogSubscription = this.dialogService.closeDialog$.subscribe(() => {
       this.visible = false;
     });
   }
-  getdatasubmet(){
-    if(isPlatformBrowser(this.pLATFORM_ID)){
-         const parems =this._activatedRoute.snapshot.params;
-    if(parems['id']){
-      this._SubjectService.details(parems['id']).subscribe({
-          next:(res)=>{
-            this.loadexam=res.exams
-            this.Exams=res.exams
+
+  getdatasubmet() {
+    if (isPlatformBrowser(this.pLATFORM_ID)) {
+      const parems = this._activatedRoute.snapshot.params;
+      if (parems['id']) {
+        this.detailsSubscription = this._SubjectService.details(parems['id']).subscribe({
+          next: (res) => {
+            this.loadexam = res.exams;
+            this.Exams = res.exams;
           },
-          error:(err)=>{
+          error: (err) => {
             console.log(err);
           }
-        })
+        });
+      }
     }
-    }
-
   }
-  openexam(examid:string) {
-      this.visible = true;
-      this._store.dispatch(loadquestion({examid:examid}));
 
-  };
+  openexam(examid: string) {
+    this.visible = true;
+    this._store.dispatch(loadquestion({ examid }));
+  }
 
   ngOnDestroy(): void {
-
     if (this.dialogSubscription) {
       this.dialogSubscription.unsubscribe();
     }
+
+    if (this.detailsSubscription) {
+      this.detailsSubscription.unsubscribe();
+    }
   }
 }
-
-

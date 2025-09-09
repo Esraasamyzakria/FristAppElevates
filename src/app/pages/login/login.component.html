@@ -57,6 +57,7 @@
   </div>
   }
         <a  routerLink="/forget" class="cursor-pointer  flex justify-end text-[#4461F2]"> Recover Password ?</a>
+        <p class=" font-semibold text-red-700  text-center">{{messerror}}</p>
         <button  [disabled]="isloading"  type="submit" class="  bg-[#4461F2]  mx-auto text-white my-5  focus:outline-none  font-medium rounded-2xl text-sm w-full py-3 text-center block ">Sign in  @if (isloading) {
   <i class=" fas fa-spinner fa-spin"></i>
 } </button>

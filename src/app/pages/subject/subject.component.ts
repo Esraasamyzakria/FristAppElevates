@@ -1,7 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SubjectService } from '../../core/services/subject/subject.service';
 import { ISubject } from '../../shared/interface/isubject';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-subject',
@@ -9,25 +10,30 @@ import { ISubject } from '../../shared/interface/isubject';
   templateUrl: './subject.component.html',
   styleUrl: './subject.component.scss'
 })
-export class SubjectComponent implements OnInit {
+export class SubjectComponent implements OnInit, OnDestroy {
 
-_SubjectService=inject(SubjectService);
-subjectdata:ISubject[]=[];
+  private subjectSub!: Subscription;
+  _SubjectService = inject(SubjectService);
+  subjectdata: ISubject[] = [];
 
-ngOnInit(): void {
-    this.getsubject()
-}
+  ngOnInit(): void {
+    this.getsubject();
+  }
 
-getsubject():void{
-  this._SubjectService.subject().subscribe({
-    next:(res)=>{
-      this.subjectdata=res.subjects
-    },
-            error:(err)=>{
-          console.log(err)
-        }
-  })
+  ngOnDestroy(): void {
+    if (this.subjectSub) {
+      this.subjectSub.unsubscribe();
+    }
+  }
 
-}
-
+  getsubject(): void {
+    this.subjectSub = this._SubjectService.subject().subscribe({
+      next: (res) => {
+        this.subjectdata = res.subjects;
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
 }

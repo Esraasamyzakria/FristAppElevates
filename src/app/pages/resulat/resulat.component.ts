@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Statmentexam } from '../../shared/interface/statmentexam';
 import { Iquestionexam } from '../../shared/interface/iquestionexam';
 import { DialogService } from '../../core/services/dialog/dialog.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-resulat',
@@ -10,9 +11,12 @@ import { DialogService } from '../../core/services/dialog/dialog.service';
   templateUrl: './resulat.component.html',
   styleUrl: './resulat.component.scss'
 })
-export class ResulatComponent {
-   private store = inject(Store);
- private dialogService = inject(DialogService)
+export class ResulatComponent implements OnDestroy {
+  private store = inject(Store);
+  private dialogService = inject(DialogService);
+
+  private storeSub!: Subscription; // نخزن الاشتراك هنا
+
   questions: Iquestionexam[] = [];
   userAnswers: Statmentexam[] = [];
   wrongAnswers: any[] = [];
@@ -22,7 +26,7 @@ export class ResulatComponent {
   }
 
   private loadResults(): void {
-    this.store.select("questionexam").subscribe({
+    this.storeSub = this.store.select("questionexam").subscribe({
       next: (res: any) => {
         this.questions = res.questions || [];
         this.userAnswers = res.userAnswers || [];
@@ -50,7 +54,14 @@ export class ResulatComponent {
       }
     }
   }
-   closeDialog(): void {
+
+  closeDialog(): void {
     this.dialogService.closeDialog();
+  }
+
+  ngOnDestroy(): void {
+    if (this.storeSub) {
+      this.storeSub.unsubscribe();
+    }
   }
 }
