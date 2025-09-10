@@ -3,11 +3,10 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "paths": {
-      "auth": [
-        "./dist/auth"
-      ]
-    },
+  "baseUrl": "./",
+  "paths": {
+    "auth": ["projects/auth/src/public-api"]
+  },
     "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitOverride": true,
