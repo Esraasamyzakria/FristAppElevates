@@ -38,7 +38,7 @@ export class RegisterComponent implements OnDestroy {
 
       // نخزن الـ subscription هنا
       this.registerSubscription = this._authService.register(this.rgisterform.value).subscribe({
-        next: (res) => {
+        next: (res:any) => {
           if (res.message === 'success') {
             this._router.navigate(['/login']);
           }

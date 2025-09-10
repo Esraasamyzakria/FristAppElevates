@@ -28,11 +28,8 @@ export class SubjectComponent implements OnInit, OnDestroy {
 
   getsubject(): void {
     this.subjectSub = this._SubjectService.subject().subscribe({
-      next: (res) => {
+      next: (res:any) => {
         this.subjectdata = res.subjects;
-      },
-      error: (err) => {
-        console.log(err);
       }
     });
   }

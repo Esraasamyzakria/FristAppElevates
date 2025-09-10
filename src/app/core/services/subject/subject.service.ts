@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import {  Observable } from 'rxjs';
-import { ISubject } from '../../../shared/interface/isubject';
 import { BASE_URL } from 'auth';
 
 @Injectable({

@@ -51,13 +51,13 @@ export class ScoreresulatComponent implements OnInit, OnDestroy {
 
   private getResultsFromStore(): void {
     this.storeSub = this._store.select("questionexam").subscribe({
-      next: (res) => {
+      next: (res:any) => {
         this.questions = res.questions || [];
         this.userAnswers = res.userAnswers || [];
         this.totalQuestions = this.questions.length;
         this.calculateResults();
       },
-      error: (err) => {
+      error: (err:any) => {
         console.error('Error loading results from store:', err);
       }
     });

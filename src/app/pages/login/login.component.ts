@@ -33,7 +33,7 @@ export class LoginComponent implements OnDestroy {
 
       // نخزن الـ subscription
       this.loginSubscription = this._authService.login(this.loginform.value).subscribe({
-        next: (res) => {
+        next: (res:any) => {
           if (res.message === "success") {
             localStorage.setItem("token", res.token);
             this._router.navigate(['/subjects']);

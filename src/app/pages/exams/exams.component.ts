@@ -92,7 +92,7 @@ export class ExamsComponent implements OnInit, OnDestroy {
           this.selectedAnswer = prev ? prev.key : '';
         }
       },
-      error: (err) => console.error('Error loading questions:', err)
+      error: (err:any) => console.error('Error loading questions:', err)
     });
 
     this.subscriptions.push(sub);

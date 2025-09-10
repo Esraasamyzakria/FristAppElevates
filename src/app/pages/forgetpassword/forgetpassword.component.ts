@@ -38,7 +38,7 @@ export class ForgetpasswordComponent implements OnDestroy {
 
     if (this.verfiyemail.valid) {
       const sub = this._authService.vrefyemail(this.verfiyemail.value).subscribe({
-        next: (res) => {
+        next: (res:any) => {
           if (res.message == 'success') {
             this.step = 2;
           }
@@ -53,7 +53,7 @@ export class ForgetpasswordComponent implements OnDestroy {
   submitcode(): void {
     if (this.verfiycode.valid) {
       const sub = this._authService.vrefycode(this.verfiycode.value).subscribe({
-        next: (res) => {
+        next: (res:any) => {
           if (res.status == 'Success') {
             this.step = 3;
           }
@@ -68,7 +68,7 @@ export class ForgetpasswordComponent implements OnDestroy {
   submitpassword(): void {
     if (this.resetpassword.valid) {
       const sub = this._authService.vrefypasswored(this.resetpassword.value).subscribe({
-        next: (res) => {
+        next: (res:any) => {
           localStorage.setItem("token", res.token);
           this._router.navigate(['/subjects']);
         }

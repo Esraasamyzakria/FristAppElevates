@@ -25,7 +25,7 @@ _router=inject(Router)
   }
   logout():void{
     this._authService.logout().subscribe({
-      next:(res)=>{
+      next:(res:any)=>{
         if(res.message ==="success"){
         localStorage.removeItem("token");
         this._router.navigate(['/login'])

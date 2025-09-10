@@ -4,7 +4,6 @@ import { SubjectService } from '../../core/services/subject/subject.service';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule  } from "primeng/button";
 import { StepperModule } from 'primeng/stepper';
-import { QuestionService } from '../../core/services/question/question.service';
 import { isPlatformBrowser } from '@angular/common';
 import { ExamsComponent } from "../exams/exams.component";
 import { Store } from '@ngrx/store';
@@ -47,12 +46,9 @@ export class DetailsComponent implements OnInit, OnDestroy {
       const parems = this._activatedRoute.snapshot.params;
       if (parems['id']) {
         this.detailsSubscription = this._SubjectService.details(parems['id']).subscribe({
-          next: (res) => {
+          next: (res:any) => {
             this.loadexam = res.exams;
             this.Exams = res.exams;
-          },
-          error: (err) => {
-            console.log(err);
           }
         });
       }

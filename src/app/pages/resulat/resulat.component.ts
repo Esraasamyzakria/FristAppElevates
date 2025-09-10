@@ -32,7 +32,7 @@ export class ResulatComponent implements OnDestroy {
         this.userAnswers = res.userAnswers || [];
         this.filterWrongAnswers();
       },
-      error: (err) => {
+      error: (err:any) => {
         console.error('Error loading results:', err);
       }
     });

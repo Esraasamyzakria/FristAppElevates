@@ -2,12 +2,12 @@
   "name": "fristapp",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "serve:ssr:fristapp": "node dist/fristapp/server/server.mjs"
+ "ng": "ng",
+  "start": "ng serve",
+  "build": "ng build auth && ng build fristapp",
+  "watch": "ng build --watch --configuration development",
+  "test": "ng test",
+  "serve:ssr:fristapp": "node dist/fristapp/server/server.mjs"
   },
   "private": true,
   "dependencies": {
