@@ -8,7 +8,7 @@ import { Statmentexam } from '../../shared/interface/statmentexam';
 import { submitanswer } from '../../store/question.action';
 import { Button } from "primeng/button";
 import { ScoreresulatComponent } from '../scoreresulat/scoreresulat.component';
-import { ResulatComponent } from "../resulat/resulat.component";
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-exams',
@@ -21,6 +21,8 @@ export class ExamsComponent implements OnInit, OnDestroy {
   _questionService = inject(QuestionService);
   _store = inject(Store);
 
+  private subscriptions: Subscription[] = []; // نخزن كل الاشتراكات هنا
+
   questions: Iquestionexam[] = [];
   userAnswers: Statmentexam[] = [];
   currentQuestion: Iquestionexam | null = null;
@@ -29,62 +31,75 @@ export class ExamsComponent implements OnInit, OnDestroy {
   totalQuestions = 0;
   duration = 0;
   showInstructions = true;
-  examFinished = false; // حالة جديدة لتتبع انتهاء الامتحان
+  examFinished = false;
 
-  // متغيرات المؤقت
   minutes = 0;
   seconds = 0;
   timer: any;
   totalSecondsRemaining = 0;
-  isLoading = true;
   examStarted = false;
 
   ngOnInit(): void {
     this.getallquestion();
   }
 
+  ngOnDestroy(): void {
+    // الغاء الـ timer
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+
+    // الغاء كل الـ subscriptions
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.subscriptions = [];
+  }
+
   get formattedTime(): string {
     return `${this.minutes.toString().padStart(2, '0')}:${this.seconds.toString().padStart(2, '0')}`;
   }
+
   get allQuestionsAnswered(): boolean {
-    return this.userAnswers.length >= this.totalQuestions;
+    return this.userAnswers.length >= this.totalQuestions &&
+           this.userAnswers.every(a => !!a.key);
   }
+
+  isCurrentQuestionAnswered(): boolean {
+    return !!this.selectedAnswer;
+  }
+
   getallquestion() {
-    this._store.select("questionexam").subscribe({
+    const sub = this._store.select("questionexam").subscribe({
       next: (res: any) => {
         this.questions = res.questions || [];
-        this.userAnswers = res.userAnswers || [];
+        this.userAnswers = res.userAnswers ? [...res.userAnswers] : [];
         this.totalQuestions = this.questions.length;
 
         if (this.questions.length > 0 && this.questions[0].exam) {
           this.duration = this.questions[0].exam.duration;
-
-          // بدء المؤقت فقط إذا لم يبدأ من قبل
           if (!this.examStarted) {
             this.startTimer();
             this.examStarted = true;
           }
         }
 
-        if (this.questions.length > 0) {
-          this.currentQuestion = this.questions[this.currentQuestionIndex];
-          const previousAnswer = this.userAnswers.find((a: any) => a.questionId === this.currentQuestion?._id);
-          this.selectedAnswer = previousAnswer ? previousAnswer.key : '';
+        if (this.currentQuestionIndex >= this.questions.length) {
+          this.currentQuestionIndex = Math.max(0, this.questions.length - 1);
         }
 
-        this.isLoading = false;
+        if (this.questions.length > 0) {
+          this.currentQuestion = this.questions[this.currentQuestionIndex];
+          const prev = this.userAnswers.find(a => a.questionId === this.currentQuestion?._id);
+          this.selectedAnswer = prev ? prev.key : '';
+        }
       },
-      error: (err) => {
-        console.error('Error loading questions:', err);
-        this.isLoading = false;
-      }
+      error: (err:any) => console.error('Error loading questions:', err)
     });
+
+    this.subscriptions.push(sub);
   }
 
   startTimer() {
-    // تحويل مدة الامتحان من دقائق إلى ثواني
     this.totalSecondsRemaining = this.duration * 60;
-
     this.updateDisplayTime();
 
     this.timer = setInterval(() => {
@@ -92,7 +107,6 @@ export class ExamsComponent implements OnInit, OnDestroy {
         this.totalSecondsRemaining--;
         this.updateDisplayTime();
       } else {
-        // انتهاء الوقت
         clearInterval(this.timer);
         this.finishExam();
       }
@@ -105,16 +119,27 @@ export class ExamsComponent implements OnInit, OnDestroy {
   }
 
   onAnswerSelect(answerKey: string): void {
+    if (!this.currentQuestion) return;
+
     this.selectedAnswer = answerKey;
-    this.submitAnswer();
+
+    this.upsertLocalAnswer({
+      questionId: this.currentQuestion._id,
+      key: answerKey
+    });
+
+    this._store.dispatch(submitanswer({
+      questionid: this.currentQuestion._id,
+      keyanswer: answerKey
+    }));
   }
 
-  submitAnswer(): void {
-    if (this.currentQuestion && this.selectedAnswer) {
-      this._store.dispatch(submitanswer({
-        questionid: this.currentQuestion._id,
-        keyanswer: this.selectedAnswer
-      }));
+  private upsertLocalAnswer(ans: { questionId: string, key: string }) {
+    const idx = this.userAnswers.findIndex(a => a.questionId === ans.questionId);
+    if (idx === -1) {
+      this.userAnswers.push(ans as any);
+    } else {
+      this.userAnswers[idx] = { ...this.userAnswers[idx], key: ans.key } as any;
     }
   }
 
@@ -122,93 +147,86 @@ export class ExamsComponent implements OnInit, OnDestroy {
     if (this.currentQuestionIndex < this.questions.length - 1) {
       this.currentQuestionIndex++;
       this.currentQuestion = this.questions[this.currentQuestionIndex];
-      const previousAnswer = this.userAnswers.find((a: any) => a.questionId === this.currentQuestion?._id);
+      const previousAnswer = this.userAnswers.find(a => a.questionId === this.currentQuestion?._id);
       this.selectedAnswer = previousAnswer ? previousAnswer.key : '';
     } else {
-      // التحقق إذا تمت الإجابة على جميع الأسئلة قبل إنهاء الامتحان
       if (this.allQuestionsAnswered) {
         this.finishExam();
       } else {
-        // عرض تحذير للمستخدم
         alert('All questions must be answered before completing the exam');
-
-        // البحث عن أول سؤال لم تتم الإجابة عليه والانتقال إليه
         const unansweredQuestionIndex = this.findFirstUnansweredQuestion();
         if (unansweredQuestionIndex !== -1) {
           this.currentQuestionIndex = unansweredQuestionIndex;
           this.currentQuestion = this.questions[this.currentQuestionIndex];
-          this.selectedAnswer = '';
+          const prev = this.userAnswers.find(a => a.questionId === this.currentQuestion?._id);
+          this.selectedAnswer = prev ? prev.key : '';
         }
       }
     }
   }
-    findFirstUnansweredQuestion(): number {
-    for (let i = 0; i < this.questions.length; i++) {
-      const questionId = this.questions[i]._id;
-      const isAnswered = this.userAnswers.some(answer => answer.questionId === questionId);
 
-      if (!isAnswered) {
-        return i;
-      }
+  findFirstUnansweredQuestion(): number {
+    for (let i = 0; i < this.questions.length; i++) {
+      const qId = this.questions[i]._id;
+      const isAnswered = this.userAnswers.some(answer => answer.questionId === qId && !!answer.key);
+      if (!isAnswered) return i;
     }
-    return -1; // جميع الأسئلة تمت الإجابة عليها
+    return -1;
   }
+
   goToPreviousQuestion(): void {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
       this.currentQuestion = this.questions[this.currentQuestionIndex];
-      const previousAnswer = this.userAnswers.find((a: any) => a.questionId === this.currentQuestion?._id);
+      const previousAnswer = this.userAnswers.find(a => a.questionId === this.currentQuestion?._id);
       this.selectedAnswer = previousAnswer ? previousAnswer.key : '';
     }
   }
 
   finishExam(): void {
-    // إيقاف المؤقت
-    clearInterval(this.timer);
-
-    // حساب النتائج
-
-    // تغيير حالة الامتحان إلى منتهي
-    this.examFinished = true;
-  }
-
-
-  ngOnDestroy(): void {
     if (this.timer) {
       clearInterval(this.timer);
     }
+    this.examFinished = true;
   }
 
-  startExam(){
+  startExam() {
     this.showInstructions = false;
   }
 
   getQuestionDotClass(index: number): string {
     if (index === this.currentQuestionIndex) {
-      return 'bg-[#4461F2] text-white border-2 border-[#4461F2] shadow-md'; // السؤال الحالي
+      return 'bg-[#4461F2] text-white border-2 border-[#4461F2] shadow-md';
     }
 
-    // التحقق إذا كان السؤال تمت الإجابة عليه
     const questionId = this.questions[index]?._id;
-    const isAnswered = this.userAnswers.some(answer => answer.questionId === questionId);
+    const isAnswered = this.userAnswers.some(answer => answer.questionId === questionId && !!answer.key);
 
     if (isAnswered) {
-      return 'bg-[#4461F2] text-white'; // سؤال تمت الإجابة عليه
+      return 'bg-[#4461F2] text-white';
     }
 
-    return 'bg-[#D9D9D9] border border-gray-400'; // سؤال لم تتم الإجابة عليه
+    return 'bg-[#D9D9D9] border border-gray-400';
   }
 
   goToQuestion(index: number): void {
     if (index >= 0 && index < this.questions.length) {
-      this.submitAnswer(); // حفظ الإجابة الحالية قبل الانتقال
+      if (this.currentQuestion && this.selectedAnswer) {
+        this.upsertLocalAnswer({
+          questionId: this.currentQuestion._id,
+          key: this.selectedAnswer
+        });
+        this._store.dispatch(submitanswer({
+          questionid: this.currentQuestion._id,
+          keyanswer: this.selectedAnswer
+        }));
+      }
+
       this.currentQuestionIndex = index;
       this.currentQuestion = this.questions[this.currentQuestionIndex];
 
-      // استعادة الإجابة إذا كانت موجودة
-      const previousAnswer = this.userAnswers.find((a: any) => a.questionId === this.currentQuestion?._id);
+      const previousAnswer = this.userAnswers.find(a => a.questionId === this.currentQuestion?._id);
       this.selectedAnswer = previousAnswer ? previousAnswer.key : '';
     }
   }
-
 }

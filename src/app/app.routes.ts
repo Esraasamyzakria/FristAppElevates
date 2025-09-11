@@ -1,40 +1,94 @@
 import { Routes } from '@angular/router';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
-import { LoginComponent } from './pages/login/login.component';
-import { RegisterComponent } from './pages/register/register.component';
-import { ForgetpasswordComponent } from './pages/forgetpassword/forgetpassword.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { SubjectComponent } from './pages/subject/subject.component';
-import { NotfoundComponent } from './pages/notfound/notfound.component';
 import { loggedGuard } from './core/guards/logged.guard';
 import { authGuard } from './core/guards/auth.guard';
-import { DetailsComponent } from './pages/details/details.component';
-import { ExamsComponent } from './pages/exams/exams.component';
-import { ScoreresulatComponent } from './pages/scoreresulat/scoreresulat.component';
-import { ResulatComponent } from './pages/resulat/resulat.component';
-
-
 
 export const routes: Routes = [
-    {path:'',redirectTo:'subjects',pathMatch:'full'},
-  {path:'',component:AuthLayoutComponent ,canActivate:[loggedGuard] ,children: [
-    {path:'',redirectTo:'login',pathMatch:'full'},
-    {path:'login',component:LoginComponent,title:'login'},
-    {path:'register',component:RegisterComponent,title:'register'},
-    {path:'forget',component:ForgetpasswordComponent,title:'forget'},
-  ] },
-{
+  { path: '', redirectTo: 'subjects', pathMatch: 'full' },
 
-  path: '',
-  component:DashboardComponent,
-  children: [
-        {path:'subjects',component:SubjectComponent,canActivate:[authGuard],title:'subjects'},
-        { path: 'details/:id', component: DetailsComponent,title:'details' },
-        { path: 'Exams', component:ExamsComponent,title:'Exams' },
-        { path: 'Score', component:ScoreresulatComponent,title:'Score' },
-        { path: 'Resulat', component:ResulatComponent,title:'Resulat' },
-  ]
-},
-{path:"**",component:NotfoundComponent}
+  {
+    path: '',
+    component: AuthLayoutComponent,
+    canActivate: [loggedGuard],
+    children: [
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+      {
+        path: 'login',
+        loadComponent: () =>
+          import('./pages/login/login.component').then((m) => m.LoginComponent),
+        title: 'login',
+      },
+      {
+        path: 'register',
+        loadComponent: () =>
+          import('./pages/register/register.component').then(
+            (m) => m.RegisterComponent
+          ),
+        title: 'register',
+      },
+      {
+        path: 'forget',
+        loadComponent: () =>
+          import('./pages/forgetpassword/forgetpassword.component').then(
+            (m) => m.ForgetpasswordComponent
+          ),
+        title: 'forget',
+      },
+    ],
+  },
+
+  {
+    path: '',
+    component: DashboardComponent,
+    children: [
+      {
+        path: 'subjects',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./pages/subject/subject.component').then(
+            (m) => m.SubjectComponent
+          ),
+        title: 'subjects',
+      },
+      {
+        path: 'details/:id',
+        loadComponent: () =>
+          import('./pages/details/details.component').then(
+            (m) => m.DetailsComponent
+          ),
+        title: 'details',
+      },
+      {
+        path: 'Exams',
+        loadComponent: () =>
+          import('./pages/exams/exams.component').then((m) => m.ExamsComponent),
+        title: 'Exams',
+      },
+      {
+        path: 'Score',
+        loadComponent: () =>
+          import('./pages/scoreresulat/scoreresulat.component').then(
+            (m) => m.ScoreresulatComponent
+          ),
+        title: 'Score',
+      },
+      {
+        path: 'Resulat',
+        loadComponent: () =>
+          import('./pages/resulat/resulat.component').then(
+            (m) => m.ResulatComponent
+          ),
+        title: 'Resulat',
+      },
+    ],
+  },
+
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./pages/notfound/notfound.component').then(
+        (m) => m.NotfoundComponent
+      ),
+  },
 ];
-

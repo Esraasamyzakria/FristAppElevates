@@ -11,10 +11,6 @@ export class QuestionService {
 
  _HttpClient=inject(HttpClient);
  _bASE_URL=inject(BASE_URL);
-
-
-
-
  getallquestion(id:string):Observable<any>{
   return this._HttpClient.get(this._bASE_URL+`/api/v1/questions?exam=${id}`)
  }

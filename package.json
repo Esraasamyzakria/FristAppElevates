@@ -2,12 +2,12 @@
   "name": "fristapp",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "serve:ssr:fristapp": "node dist/fristapp/server/server.mjs"
+ "ng": "ng",
+  "start": "ng serve",
+  "build": "ng build auth && ng build fristapp",
+  "watch": "ng build --watch --configuration development",
+  "test": "ng test",
+  "serve:ssr:fristapp": "node dist/fristapp/server/server.mjs"
   },
   "private": true,
   "dependencies": {
@@ -28,6 +28,8 @@
     "express": "^4.18.2",
     "flowbite": "^3.1.2",
     "jwt-decode": "^4.0.0",
+    "ngx-spinner": "^19.0.0",
+    "ngx-toastr": "^19.0.0",
     "primeicons": "^7.0.0",
     "primeng": "^19.1.4",
     "rxjs": "~7.8.0",
